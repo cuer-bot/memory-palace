@@ -6,8 +6,19 @@ function getAuthHeader(): string {
     return `Bearer ${conf.palace_id}`;
 }
 
+async function handleError(res: any) {
+    const text = await res.text();
+    try {
+        const err = JSON.parse(text);
+        console.error('Error:', err.error || text);
+    } catch {
+        console.error('Error:', res.status, text || '(empty response)');
+    }
+    process.exit(1);
+}
+
 export async function inviteAgent(agentName: string, permissions: string = 'read') {
-    const res = await fetch(`${API_BASE}/api/palace/agents`, {
+    const res = await fetch(`${API_BASE}/api/agents`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -16,11 +27,7 @@ export async function inviteAgent(agentName: string, permissions: string = 'read
         body: JSON.stringify({ agent_name: agentName, permissions }),
     });
 
-    if (!res.ok) {
-        const err = await res.json() as any;
-        console.error('Error:', err.error);
-        process.exit(1);
-    }
+    if (!res.ok) return handleError(res);
 
     const data = await res.json() as any;
     const agent = data.agent;
@@ -34,7 +41,7 @@ export async function inviteAgent(agentName: string, permissions: string = 'read
 }
 
 export async function revokeAgent(agentName: string) {
-    const res = await fetch(`${API_BASE}/api/palace/agents`, {
+    const res = await fetch(`${API_BASE}/api/agents`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -43,25 +50,17 @@ export async function revokeAgent(agentName: string) {
         body: JSON.stringify({ agent_name: agentName }),
     });
 
-    if (!res.ok) {
-        const err = await res.json() as any;
-        console.error('Error:', err.error);
-        process.exit(1);
-    }
+    if (!res.ok) return handleError(res);
 
     console.log(`Agent '${agentName}' revoked.`);
 }
 
 export async function listAgents() {
-    const res = await fetch(`${API_BASE}/api/palace/agents`, {
+    const res = await fetch(`${API_BASE}/api/agents`, {
         headers: { 'Authorization': getAuthHeader() },
     });
 
-    if (!res.ok) {
-        const err = await res.json() as any;
-        console.error('Error:', err.error);
-        process.exit(1);
-    }
+    if (!res.ok) return handleError(res);
 
     const data = await res.json() as any;
     const agents: any[] = data.agents;
