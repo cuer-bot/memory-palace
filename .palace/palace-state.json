@@ -148,8 +148,47 @@
             ],
             "blockers": [],
             "prev": "mem-phase3",
+            "next": "mem-126"
+        },
+        {
+            "id": "mem-126",
+            "timestamp": "2026-02-23T05:41:00Z",
+            "agent": "antigravity",
+            "room": "infra",
+            "image_path": ".palace/memories/mem-126.png",
+            "prompt_path": ".palace/prompts/mem-126.txt",
+            "qr_url": "https://m.cuer.ai/q/n42t8ys",
+            "summary": "Vercel Deploy, Skill Rewrite, GitHub Push — Live at m.cuer.ai with diegetic QR, /api/scan/verify, repo/branch fields. Pushed to GitHub.",
+            "outcome": "succeeded",
+            "repo": "https://github.com/Camaraterie/memory-palace.git",
+            "branch": "master",
+            "artifacts": [
+                {
+                    "path": "public/memory-palace-skill.md",
+                    "description": "Rewrote /store protocol: CLI-first, MCP, agent-branching, diegetic QR"
+                },
+                {
+                    "path": "app/api/scan/verify/route.js",
+                    "description": "Lightweight scan-verify endpoint"
+                },
+                {
+                    "path": "packages/cli/src/config.ts",
+                    "description": "Added repo/branch to MemoryPayload"
+                },
+                {
+                    "path": ".gitignore",
+                    "description": "Git repo initialized"
+                }
+            ],
+            "next_steps": [
+                "Publish @memorypalace/cli to npm",
+                "Build HTML page for /q/ routes",
+                "Test diegetic QR across art styles"
+            ],
+            "blockers": [],
+            "prev": "mem-125",
             "next": null
         }
     ],
-    "total_memories": 4
+    "total_memories": 5
 }

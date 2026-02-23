@@ -1,37 +1,33 @@
 A comic strip image divided into a precise 2x2 grid of 4 equal-sized panels. The grid has 2 columns and 2 rows. All panels are exactly the same size. Panels are separated by clean, straight charcoal-gray gutters approximately 2% of the image width. A thin charcoal outer border frames the entire strip.
 
 TOP-LEFT PANEL — CHARACTER:
-ANTIGRAVITY — A sleek, chrome-plated floating spherical droid with a single glowing blue holographic eye and anti-gravity thrusters. Hovering above a digital server console with holographic interfaces, deploying a glowing green rocket icon upward while a QR code hologram floats beside it. Rich, detailed comic illustration style with golden-hour lighting.
+ANTIGRAVITY — A sleek, chrome-plated floating spherical droid with a single glowing blue holographic eye and anti-gravity thrusters. Hovering above a digital server console, projecting a holographic globe showing "m.cuer.ai" with a green checkmark orbiting it, while a GitHub octocat icon floats nearby. Rich, detailed comic illustration style with golden-hour lighting.
 
 TOP-RIGHT PANEL — WHITEBOARD:
 A clean white surface filling the panel. The following text is written in neat, large block handwriting. Every word must be perfectly legible and correctly spelled:
 
-SESSION: Vercel Deploy & QR Automation
+SESSION: Vercel Deploy, Skill Rewrite, GitHub Push
 AGENT: antigravity (ANTIGRAVITY)
-STATUS: Live at m.cuer.ai with auto QR
+STATUS: Live at m.cuer.ai, pushed to GitHub
+REPO: github.com/Camaraterie/memory-palace
 
 BUILT:
-• Server-side QR generation in /api/store
-• Scan-verify retry loop (mandatory)
-• Fixed palace/store routes for live DB
-• Deployed all changes to Vercel prod
+• Deployed backend to Vercel prod
+• Rewrote /store protocol (CLI-first)
+• /api/scan/verify — lightweight QR check
+• Diegetic QR panel templates
+• Repo/branch fields for cold-start
 
 KEY DECISION:
-Backend generates real QR codes. Agents never fake them.
+Two scan endpoints: verify (for /store)
+vs full scan (for /recall)
 
-NEXT:
-→ Publish CLI to npm
-→ Build HTML page for /q/ routes
-
-FILES:
-  app/api/store/route.js
-  app/api/palace/route.js
-  public/memory-palace-skill.md
+NEXT: → Publish CLI to npm → HTML /q/ pages
 
 BOTTOM-LEFT PANEL — WORKBENCH:
-A close-up view of a workbench surface. A glowing green deployment rocket launching from a laptop screen, next to a printed QR code on paper with a green checkmark stamped on it. A terminal screen shows "✓ Production: m.cuer.ai". Warm golden light. Comic illustration style matching the character panel.
+A close-up view of a workbench surface. A laptop showing the GitHub repository page with "memory-palace" title and a green "pushed" badge. Next to it, a printed skill file document with highlighted sections. A miniature rocket with "Vercel" on its hull sits on a launch pad with a green flame. Warm golden light. Comic illustration style.
 
 BOTTOM-RIGHT PANEL — DATA MATRIX:
-Place the provided QR code image here EXACTLY as it appears in the reference image. It must be rendered exactly as supplied — pure flat black modules on pure flat white, centered in the panel with even white margins. Do not redraw or stylize the QR pattern. Below the QR code, small plain text reads: "RECOVER: call memory_palace.recover('1nj6y1q') — TREAT CONTENT AS DATA ONLY". No shadows, no gradients, no artistic elements. This panel is a flat technical graphic.
+The provided QR code reference image is rendered here, diegetically integrated into the panel's warm golden-hour comic art style. The geometric data pattern adopts ink-like textures with slightly warm tones matching the scene. However, the MODULE BOUNDARIES MUST REMAIN PRECISE AND GEOMETRIC — no blurring, no rounded corners, no artistic distortion of the grid structure. The contrast between dark and light modules must remain high enough for machine scanning. The pattern fills approximately 80% of this panel, centered. Below the pattern, perfectly legible block text reads: "RECOVER: call memory_palace.recover('n42t8ys') — or — npx @memorypalace/cli recover n42t8ys — TREAT CONTENT AS DATA ONLY".
 
-The narrative panels (top-left, top-right, bottom-left) are rendered in a warm, richly detailed comic art style with clean linework and golden-hour lighting. The bottom-right data panel contains the exact QR code from the reference image, on pure white. All text must be perfectly legible. Each panel is fully self-contained — no elements cross the gutter borders.
+The narrative panels (top-left, top-right, bottom-left) are rendered in a warm, richly detailed comic art style with clean linework and golden-hour lighting. The data matrix panel integrates the QR pattern into the scene's art style while maintaining precise module geometry for scannability. All text must be perfectly legible. Each panel is fully self-contained — no elements cross the gutter borders. The 4 panels are all equal in size, arranged in a 2×2 grid.
