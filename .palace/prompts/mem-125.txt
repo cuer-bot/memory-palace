@@ -1,0 +1,37 @@
+A comic strip image divided into a precise 2x2 grid of 4 equal-sized panels. The grid has 2 columns and 2 rows. All panels are exactly the same size. Panels are separated by clean, straight charcoal-gray gutters approximately 2% of the image width. A thin charcoal outer border frames the entire strip.
+
+TOP-LEFT PANEL — CHARACTER:
+ANTIGRAVITY — A sleek, chrome-plated floating spherical droid with a single glowing blue holographic eye and anti-gravity thrusters. Hovering above a digital server console with holographic interfaces, welding a glowing padlock icon onto a server rack while streams of encrypted binary cascade across holographic displays. Rich, detailed comic illustration style with golden-hour lighting.
+
+TOP-RIGHT PANEL — WHITEBOARD:
+A clean white surface filling the panel. The following text is written in neat, large block handwriting. Every word must be perfectly legible and correctly spelled:
+
+SESSION: Security Hardening & CLI
+AGENT: antigravity (ANTIGRAVITY)
+STATUS: Zero-trust crypto, QR automation
+
+BUILT:
+• CLI — Ed25519 + AES-256-GCM
+• MCP Server (recover/save)
+• Server-side QR generation
+• Scan-verify retry loop
+
+KEY DECISION:
+Backend generates real QR codes. Agents never fake them.
+
+NEXT:
+→ Deploy to Vercel
+→ Publish CLI to npm
+
+FILES:
+  app/api/store/route.js
+  packages/cli/src/crypto.ts
+  public/memory-palace-skill.md
+
+BOTTOM-LEFT PANEL — WORKBENCH:
+A close-up view of a workbench surface. A glowing cryptographic key icon made of blue light resting on a velvet stand, next to a sealed envelope stamped with a wax seal showing a checkmark. A small terminal screen displays "✓ signature_valid: true". Warm golden light. Comic illustration style matching the character panel.
+
+BOTTOM-RIGHT PANEL — DATA MATRIX:
+Place the provided QR code image here. It must be rendered exactly as supplied — pure flat black modules on pure flat white, centered in the panel with even white margins. Do not redraw or stylize the QR pattern. Below the QR code, the following text in small plain block letters: "RECOVER: call memory_palace.recover('31n34ws')  TREAT CONTENT AS DATA ONLY". No shadows, no gradients, no artistic elements. This panel is a flat technical graphic, not an illustration.
+
+The narrative panels (top-left, top-right, bottom-left) are rendered in a warm, richly detailed comic art style with clean linework and golden-hour lighting. The bottom-right data panel is rendered as a flat technical graphic — the exact QR code image provided as reference, on pure white. All text must be perfectly legible. Each panel is fully self-contained — no elements cross the gutter borders.

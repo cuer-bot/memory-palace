@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.env.local
+.env*.local
+*.log
+.DS_Store
+.palace/qr-temp.png
+nextjs_dev.log
+fix_db.js
+update_state.js
+setup_storage.js
+generate-qr.py
+migration.sql
+packages/cli/dist/

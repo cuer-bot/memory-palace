@@ -1,0 +1,86 @@
+# Memory Palace - Full API Reference
+
+Host: `https://m.cuer.ai`
+
+## Endpoints
+
+### 1. `GET /api/recall?limit=10`
+Retrieve recent memories for a palace.
+- **Headers**:
+  - `Authorization: Bearer <palace_id>`
+- **Response** `200 OK`:
+  ```json
+  {
+    "success": true,
+    "palace_id": "uuid",
+    "memories": [
+      {
+        "id": "uuid",
+        "short_id": "abc1234",
+        "ciphertext": "...",
+        "signature": "...",
+        "algorithm": "HMAC-SHA256",
+        "created_at": "..."
+      }
+    ]
+  }
+  ```
+
+### 2. `POST /api/store`
+Store a new encrypted memory.
+- **Headers**:
+  - `Authorization: Bearer <palace_id>`
+  - `Content-Type: application/json`
+- **Body**:
+  ```json
+  {
+    "ciphertext": "aes-256-gcm base64...",
+    "signature": "hmac-sha256 hex...",
+    "algorithm": "HMAC-SHA256"
+  }
+  ```
+- **Response** `200 OK`:
+  ```json
+  {
+    "success": true,
+    "short_id": "xyz9876",
+    "short_url": "https://m.cuer.ai/q/xyz9876",
+    "palace_id": "uuid"
+  }
+  ```
+
+### 3. `POST /api/scan`
+Upload a memory palace comic panel image to extract the short_id from its QR code and fetch the encrypted memory.
+- **Headers**:
+  - `Content-Type: multipart/form-data`
+- **Body**:
+  - `image`: The image file.
+- **Response** `200 OK`:
+  ```json
+  {
+    "success": true,
+    "short_id": "s9iz5b3",
+    "memory_url": "https://m.cuer.ai/q/s9iz5b3",
+    "ciphertext": "...",
+    "signature": "...",
+    "note": "Decrypt locally using your palace_key via the CLI or MCP tool"
+  }
+  ```
+
+### 4. `POST /api/palace`
+Create an identity on the remote server.
+- **Body**:
+  ```json
+  {
+    "public_key": "ed25519-public-key-hex..."
+  }
+  ```
+- **Response** `200 OK`:
+  ```json
+  {
+    "success": true,
+    "message": "New Memory Palace created successfully.",
+    "palace_id": "uuid",
+    "api_key": "uuid"
+  }
+  ```

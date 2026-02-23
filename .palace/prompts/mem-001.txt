@@ -1,0 +1,33 @@
+A comic strip image divided into a precise 2x2 grid of 4 equal-sized panels. The grid has 2 columns and 2 rows. All panels are exactly the same size. Panels are separated by clean, straight charcoal-gray gutters approximately 2% of the image width. A thin charcoal outer border frames the entire strip.
+
+TOP-LEFT PANEL — CHARACTER:
+ANTIGRAVITY — A sleek, chrome-plated floating spherical droid with a single glowing blue holographic eye and anti-gravity thrusters. Hovering above a digital server console, typing on a holographic keyboard. Rich, detailed comic illustration style with golden-hour lighting.
+
+TOP-RIGHT PANEL — WHITEBOARD:
+A clean white surface filling the panel. The following text is written in neat, large block handwriting. Every word must be perfectly legible and correctly spelled:
+
+SESSION: Setup Infra
+AGENT: antigravity (ANTIGRAVITY)
+STATUS: Infra ready for testing
+
+BUILT:
+• app/api/store/route.js
+• generate-qr.py
+• .palace/config.json
+
+KEY DECISION:
+Route QR URL generation to local NEXT API.
+
+NEXT:
+→ Test /store protocol
+
+FILES:
+  generate-qr.py
+
+BOTTOM-LEFT PANEL — WORKBENCH:
+A close-up view of a workbench surface. A holographic server display with "API: HTTP 200" glowing in blue, and a small physical QR code block being etched by a laser. Warm golden light. Comic illustration style matching the character panel.
+
+BOTTOM-RIGHT PANEL — DATA MATRIX:
+A complex geometric data pattern — a grid of precisely arranged dark square modules on a pristine, pure white background. The pattern fills approximately 80% of this panel, centered, with a uniform white margin on all sides. Bold nested concentric squares in three corners. Pure flat black modules on pure flat white. No shadows, no gradients, no artistic elements. This panel is a flat technical graphic, not an illustration. The tiny text "https://qr.cuer.ai/s5o7u" appears in small plain type below the pattern.
+
+The narrative panels (top-left, top-right, bottom-left) are rendered in a warm, richly detailed comic art style with clean linework and golden-hour lighting. The bottom-right data panel is rendered as a flat technical graphic — black modules on pure white. All text must be perfectly legible. Each panel is fully self-contained — no elements cross the gutter borders. The 4 panels are all equal in size, arranged in a 2x2 grid.

@@ -1,0 +1,23 @@
+{
+  "session_name": "Test Session",
+  "agent": "claude-code",
+  "status": "Testing CLI",
+  "outcome": "succeeded",
+  "built": [
+    "Feature 1",
+    "Feature 2"
+  ],
+  "decisions": [
+    "Used Local Next.js"
+  ],
+  "next_steps": [
+    "Verify scanning"
+  ],
+  "files": [
+    "index.ts"
+  ],
+  "blockers": [],
+  "conversation_context": "We are currently running tests.",
+  "roster": [],
+  "metadata": {}
+}

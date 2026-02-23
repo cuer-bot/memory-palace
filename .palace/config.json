@@ -1,0 +1,11 @@
+{
+    "gemini_api_key_env": "GEMINI_API_KEY",
+    "model": "gemini-3-pro-image-preview",
+    "image_resolution": "1024x1024",
+    "max_recall_images": 5,
+    "auto_store_on_exit": false,
+    "qr_base_url": "http://localhost:3000",
+    "qr_api_key_env": "CUER_API_KEY",
+    "qr_fallback": "local",
+    "qr_link_target": "prompt"
+}

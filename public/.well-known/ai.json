@@ -1,0 +1,11 @@
+{
+    "name": "Memory Palace",
+    "description": "Cryptographically signed session memory for AI agents",
+    "version": "2.0.0",
+    "skill_url": "https://m.cuer.ai/skill.md",
+    "api_base": "https://m.cuer.ai/api",
+    "openapi": "https://m.cuer.ai/openapi.json",
+    "mcp_manifest": "https://m.cuer.ai/.well-known/mcp.json",
+    "onboarding": "npx @memorypalace/cli init",
+    "trust_model": "https://m.cuer.ai/security.md"
+}
