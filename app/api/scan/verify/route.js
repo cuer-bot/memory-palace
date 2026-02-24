@@ -28,11 +28,16 @@ export async function POST(request) {
         const decodedUrl = code.data
         const urlMatch = decodedUrl.match(/\/q\/([a-zA-Z0-9_-]+)$/)
 
+        const shortId = urlMatch ? urlMatch[1] : null
+        const capsuleUrl = shortId ? `https://m.cuer.ai/q/${shortId}` : null
+
         return NextResponse.json({
             scannable: true,
-            short_id: urlMatch ? urlMatch[1] : null,
+            short_id: shortId,
             decoded_url: decodedUrl,
-            valid_format: !!urlMatch
+            capsule_url: capsuleUrl,
+            valid_format: !!urlMatch,
+            next: capsuleUrl ? `GET ${capsuleUrl} — no auth required — to retrieve the encrypted memory capsule` : null,
         })
 
     } catch (error) {

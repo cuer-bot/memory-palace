@@ -58,14 +58,17 @@ export async function POST(request) {
             }, { status: 404 })
         }
 
+        const capsuleUrl = `https://m.cuer.ai/q/${shortId}`
+
         return NextResponse.json({
             success: true,
             short_id: shortId,
             memory_url: shortUrl,
+            capsule_url: capsuleUrl,
             agent: memoryData.agent,
             created_at: memoryData.created_at,
             recover: `mempalace recover ${shortId}`,
-            note: "Use the CLI to decrypt: mempalace recover " + shortId
+            next: `GET ${capsuleUrl} — no auth required — to retrieve the encrypted memory capsule`,
         })
 
     } catch (error) {
