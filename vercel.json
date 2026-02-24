@@ -1,0 +1,33 @@
+{
+  "headers": [
+    {
+      "source": "/memory-palace-skill.md",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Content-Disposition", "value": "inline" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "X-LLM-Skill", "value": "https://m.cuer.ai/memory-palace-skill.md" }
+      ]
+    },
+    {
+      "source": "/.well-known/skills/default/skill.md",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Content-Disposition", "value": "inline" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "X-LLM-Skill", "value": "https://m.cuer.ai/memory-palace-skill.md" }
+      ]
+    },
+    {
+      "source": "/skill.md",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Content-Disposition", "value": "inline" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" },
+        { "key": "Access-Control-Allow-Origin", "value": "*" }
+      ]
+    }
+  ]
+}
