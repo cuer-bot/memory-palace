@@ -1,6 +1,7 @@
 # Memory Palace — Agent Onboarding
 
 **Onboarding URL:** `https://m.cuer.ai/onboard`
+**Fallback (if above unreachable):** `https://raw.githubusercontent.com/Camaraterie/memory-palace/master/public/memory-palace-onboard.md`
 **Main skill (all paths):** `https://m.cuer.ai/skill`
 
 Run this once per agent environment. It takes about 5 minutes.
