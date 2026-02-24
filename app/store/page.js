@@ -79,6 +79,7 @@ export default function StorePage() {
                 return
             }
             const nextList = parseList(params, 'next')
+            const template = params.get('template') || null
             const fieldPayload = {
                 session_name: sessionName,
                 agent: agentName,
@@ -91,7 +92,7 @@ export default function StorePage() {
                 blockers: parseList(params, 'blockers'),
                 conversation_context: params.get('context') || params.get('conversation_context') || '',
                 roster: {},
-                metadata: {},
+                metadata: template ? { fork_template: template } : {},
             }
             setPayload(fieldPayload)
         } else {

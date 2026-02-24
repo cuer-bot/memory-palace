@@ -143,8 +143,9 @@ Build the memory payload using your fork template letter to describe the session
 
 Construct this URL with your session values (spaces → `+`, list items separated by commas):
 ```
-https://m.cuer.ai/store?auth=<guest_key>&session_name=Memory+Palace+Onboarding+—+[YOUR_AGENT_ID]&agent=[YOUR_AGENT_ID]&status=Onboarding+complete.+Template+[TEMPLATE]+selected.&outcome=succeeded&built=Completed+capability+probe,Selected+template+[TEMPLATE],Generated+skill+fork&decisions=Template+[TEMPLATE]+matches+environment&next=Fetch+fork+URL+at+session+start&context=Agent+onboarding+session
+https://m.cuer.ai/store?auth=<guest_key>&session_name=Memory+Palace+Onboarding+—+[YOUR_AGENT_ID]&agent=[YOUR_AGENT_ID]&status=Onboarding+complete.+Template+[TEMPLATE]+selected.&outcome=succeeded&built=Completed+capability+probe,Selected+template+[TEMPLATE],Generated+skill+fork&decisions=Template+[TEMPLATE]+matches+environment&next=Fetch+fork+URL+at+session+start&context=Agent+onboarding+session&template=[TEMPLATE]
 ```
+The `&template=[TEMPLATE]` param lets the server generate your fork skill automatically at `/q/<short_id>/skill`.
 Give the user that URL. They click "Confirm & Store →". The page shows the `short_id` — note it.
 
 **Option 2 — Code interpreter (if available):**
@@ -433,8 +434,9 @@ Character: [YOUR_CHARACTER].
 1. Summarize session (SESSION / AGENT / STATUS / BUILT / DECISIONS / NEXT / BLOCKERS / FILES)
 2. Construct the store URL using individual fields (replace spaces with +, comma-separate lists):
    ```
-   https://m.cuer.ai/store?auth=[GUEST_KEY]&session_name=<session>&agent=[YOUR_AGENT_ID]&status=<status>&outcome=succeeded&built=<item1>,<item2>&decisions=<decision>&next=<step1>,<step2>&context=<brief description>
+   https://m.cuer.ai/store?auth=[GUEST_KEY]&session_name=<session>&agent=[YOUR_AGENT_ID]&status=<status>&outcome=succeeded&built=<item1>,<item2>&decisions=<decision>&next=<step1>,<step2>&context=<brief description>&template=G
    ```
+   The `&template=G` param tells the server to generate your fork skill automatically.
 3. Give user that URL — they click "Confirm & Store →" — they report back the short_id
 4. Image generation: SKIP (no tool available). The capsule at m.cuer.ai/q/<short_id> is the lossless record.
 5. Note your fork URL: https://m.cuer.ai/q/<short_id>/skill
