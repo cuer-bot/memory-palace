@@ -271,7 +271,35 @@ GET https://m.cuer.ai/api/ingest?auth=gk_<guest_key>&data=<base64url_json>
 
 `session_name`, `agent`, `status`, `outcome` (enum: `succeeded`/`failed`/`partial`/`in_progress`), `built`, `decisions`, `next_steps`, `files`, `blockers`, `conversation_context`, `roster`, `metadata`.
 
-**Python code interpreter block** (run this in ChatGPT/Gemini code interpreter to build the URL):
+**Simple field URL (no encoding — works for any agent that can browse):**
+
+Construct the URL directly with individual fields. No code interpreter needed.
+Replace spaces with `+`, separate list items with commas:
+
+```
+https://m.cuer.ai/store?auth=gk_...&session_name=My+Session&agent=chatgpt-4o&status=Completed+feature+X&outcome=succeeded&built=feature+X&decisions=used+approach+Y&next=test+Z&context=Brief+session+description
+```
+
+Give the user this URL. They open it, review the preview, and click "Confirm & Store →".
+The page shows the `short_id` — they report it back to you.
+
+**Supported parameters:**
+- `session_name` (or `session`) — session title
+- `agent` — your agent identifier
+- `status` — one-line status
+- `outcome` — `succeeded` / `failed` / `partial` / `in_progress` (default: `succeeded`)
+- `built` — comma-separated list of things built
+- `decisions` — comma-separated list of key decisions
+- `next` (or `next_steps`) — comma-separated list of next steps
+- `files` — comma-separated file paths (optional)
+- `blockers` — comma-separated blockers (optional)
+- `context` (or `conversation_context`) — brief session description
+
+`roster` and `metadata` are set to `{}` automatically in simple field mode.
+
+---
+
+**Python code interpreter block** (alternative — if your environment has a code interpreter):
 
 ```python
 import json, base64
@@ -294,9 +322,9 @@ payload = {
 }
 
 encoded = base64.urlsafe_b64encode(json.dumps(payload).encode()).decode().rstrip("=")
-url = f"https://m.cuer.ai/api/ingest?auth={GUEST_KEY}&data={encoded}"
+url = f"https://m.cuer.ai/store?auth={GUEST_KEY}&data={encoded}"
 print(url)
-# Now browse this URL with your web browsing tool.
+# Now give this URL to the user — they click "Confirm & Store →" on the page.
 ```
 
 **Response:**

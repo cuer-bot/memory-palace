@@ -12,6 +12,12 @@ function base64urlDecode(str) {
     }
 }
 
+function parseList(params, param) {
+    const v = params.get(param)
+    if (!v) return []
+    return v.split(',').map(s => s.trim()).filter(Boolean)
+}
+
 const mono = { fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }
 const card = {
     background: 'var(--bg-surface)',
@@ -31,8 +37,9 @@ const outcomeColor = {
 export default function StorePage() {
     const [auth, setAuth] = useState(null)
     const [payload, setPayload] = useState(null)
-    const [rawData, setRawData] = useState(null)
+    const [rawData, setRawData] = useState(null)   // non-null = base64 mode
     const [parseError, setParseError] = useState(null)
+    const [noParams, setNoParams] = useState(false)
     const [state, setState] = useState('idle') // idle | storing | success | error
     const [result, setResult] = useState(null)
     const [copied, setCopied] = useState(false)
@@ -42,14 +49,53 @@ export default function StorePage() {
         const params = new URLSearchParams(window.location.search)
         const a = params.get('auth')
         const d = params.get('data')
+        const sessionName = params.get('session_name') || params.get('session')
+
         setAuth(a)
-        setRawData(d)
-        if (!a || !d) return
-        const decoded = base64urlDecode(d)
-        if (!decoded) {
-            setParseError('Could not decode payload. The data parameter may be malformed.')
+
+        if (!a) {
+            setNoParams(true)
+            return
+        }
+
+        if (d) {
+            // --- base64url mode (existing) ---
+            setRawData(d)
+            const decoded = base64urlDecode(d)
+            if (!decoded) {
+                setParseError(
+                    'Could not decode payload. The data parameter may be malformed.\n\n' +
+                    'Alternatively, use the simple field format:\n' +
+                    '?auth=gk_...&session_name=...&agent=...&status=...&outcome=succeeded&built=item1,item2&decisions=...&next=...&context=...'
+                )
+            } else {
+                setPayload(decoded)
+            }
+        } else if (sessionName) {
+            // --- field-by-field mode (new — no encoding required) ---
+            const agentName = params.get('agent')
+            if (!agentName) {
+                setParseError('Missing required parameter: agent')
+                return
+            }
+            const nextList = parseList(params, 'next')
+            const fieldPayload = {
+                session_name: sessionName,
+                agent: agentName,
+                status: params.get('status') || '',
+                outcome: params.get('outcome') || 'succeeded',
+                built: parseList(params, 'built'),
+                decisions: parseList(params, 'decisions'),
+                next_steps: nextList.length ? nextList : parseList(params, 'next_steps'),
+                files: parseList(params, 'files'),
+                blockers: parseList(params, 'blockers'),
+                conversation_context: params.get('context') || params.get('conversation_context') || '',
+                roster: {},
+                metadata: {},
+            }
+            setPayload(fieldPayload)
         } else {
-            setPayload(decoded)
+            setNoParams(true)
         }
     }, [])
 
@@ -69,9 +115,23 @@ export default function StorePage() {
     const store = async () => {
         setState('storing')
         try {
-            const params = new URLSearchParams(window.location.search)
-            const ingestUrl = `/api/ingest?auth=${encodeURIComponent(params.get('auth'))}&data=${encodeURIComponent(params.get('data'))}`
-            const res = await fetch(ingestUrl)
+            let res
+            if (rawData) {
+                // base64 mode: use GET /api/ingest (existing path)
+                const params = new URLSearchParams(window.location.search)
+                const ingestUrl = `/api/ingest?auth=${encodeURIComponent(params.get('auth'))}&data=${encodeURIComponent(params.get('data'))}`
+                res = await fetch(ingestUrl)
+            } else {
+                // field mode: POST directly to /api/store
+                res = await fetch('/api/store', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${auth}`,
+                    },
+                    body: JSON.stringify({ payload }),
+                })
+            }
             const json = await res.json()
             if (!res.ok || !json.success) {
                 setState('error')
@@ -87,15 +147,22 @@ export default function StorePage() {
     }
 
     // --- Missing params ---
-    if (!auth && !rawData) {
+    if (noParams) {
         return (
             <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-                <div style={{ textAlign: 'center', maxWidth: '480px' }}>
+                <div style={{ textAlign: 'center', maxWidth: '560px' }}>
                     <p style={{ color: 'var(--gold)', fontFamily: 'var(--font-mono)', marginBottom: '0.5rem', fontSize: '0.85rem' }}>MEMORY PALACE</p>
                     <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '2rem', fontWeight: 400, marginBottom: '1rem' }}>Store Memory</h1>
-                    <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-                        This page is used by agents to confirm a memory before storing it.<br />
-                        Open it with <code style={mono}>?auth=gk_...&amp;data=...</code> query parameters.
+                    <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
+                        Open with one of:
+                    </p>
+                    <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '0.78rem', marginTop: '0.75rem' }}>
+                        <span style={{ color: 'var(--text-dim)' }}># base64 mode (existing)</span><br />
+                        <code>?auth=gk_...&amp;data=&lt;base64url_json&gt;</code>
+                    </p>
+                    <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: '0.78rem', marginTop: '0.75rem' }}>
+                        <span style={{ color: 'var(--text-dim)' }}># simple field mode (no encoding needed)</span><br />
+                        <code>?auth=gk_...&amp;session_name=...&amp;agent=...&amp;status=...&amp;outcome=succeeded&amp;built=item1,item2&amp;decisions=...&amp;next=...&amp;context=...</code>
                     </p>
                 </div>
             </div>
@@ -106,9 +173,9 @@ export default function StorePage() {
     if (parseError) {
         return (
             <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-                <div style={{ maxWidth: '560px', width: '100%' }}>
+                <div style={{ maxWidth: '640px', width: '100%' }}>
                     <p style={{ color: 'var(--accent-red)', fontFamily: 'var(--font-mono)', marginBottom: '1rem' }}>⚠ Payload Error</p>
-                    <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>{parseError}</p>
+                    <pre style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', whiteSpace: 'pre-wrap', fontFamily: 'var(--font-mono)', fontSize: '0.82rem', lineHeight: 1.7 }}>{parseError}</pre>
                     <button className="btn-secondary" onClick={copyUrl}>{copied ? '✓ Copied' : 'Copy URL'}</button>
                 </div>
             </div>
@@ -228,7 +295,7 @@ export default function StorePage() {
             <div style={{ ...card, background: 'transparent', border: '1px solid rgba(255,255,255,0.04)' }}>
                 <p style={{ color: 'var(--text-dim)', ...mono, fontSize: '0.75rem' }}>
                     Auth: <span style={{ color: 'var(--text-secondary)' }}>{auth?.substring(0, 8)}…</span>
-                    &nbsp;·&nbsp;Stored as plaintext via guest key
+                    &nbsp;·&nbsp;{rawData ? 'Stored as plaintext via /api/ingest' : 'Stored via /api/store (field mode)'}
                 </p>
             </div>
 
@@ -248,7 +315,7 @@ export default function StorePage() {
             </div>
 
             <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem', marginTop: '1.25rem', fontFamily: 'var(--font-mono)' }}>
-                Clicking "Confirm" calls <code>/api/ingest</code> and stores this memory to your palace.
+                Clicking "Confirm" stores this memory to your palace.
             </p>
         </div>
     )
