@@ -4,6 +4,7 @@
 **Agent-friendly (plain text, no HTML):** `https://m.cuer.ai/api/skill`
 **Fallback (if above unreachable):** `https://raw.githubusercontent.com/Camaraterie/memory-palace/master/public/memory-palace-skill.md`
 **Well-known:** `https://m.cuer.ai/.well-known/skills/default/skill.md`
+**First time with a new agent?** Run `/onboard` using `https://m.cuer.ai/onboard` — generates a personal skill fork for your exact environment.
 
 > **If your browsing tool cannot fetch the skill URL**, try `https://m.cuer.ai/api/skill` — it returns the raw skill text with no HTML wrapper, which works reliably for agents whose browse tool has trouble with static files or uncrawled domains.
 
