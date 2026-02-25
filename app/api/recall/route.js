@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server'
 import { createSupabaseAdmin } from '../../../lib/supabase'
 
-async function resolveAuth(supabase, authHeader) {
-    if (!authHeader || !authHeader.startsWith('Bearer ')) return null
+const HELP_URL = 'https://m.cuer.ai/api/troubleshoot'
 
-    const token = authHeader.split(' ')[1]
+async function resolveAuth(supabase, authHeader, queryAuth) {
+    // Query-param auth (gk_ only, for browse agents that can't set headers)
+    const token = queryAuth || (authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null)
+    if (!token) return null
 
     if (token.startsWith('gk_')) {
-        // Guest key auth
         const { data, error } = await supabase
             .from('agents')
             .select('palace_id, permissions, active')
@@ -17,7 +18,7 @@ async function resolveAuth(supabase, authHeader) {
         return { palace_id: data.palace_id, permissions: data.permissions, via: 'guest_key' }
     }
 
-    // Palace ID auth (existing behavior)
+    // Palace ID auth (owner)
     const { data, error } = await supabase
         .from('palaces')
         .select('id')
@@ -32,16 +33,24 @@ export async function GET(request) {
         const supabase = createSupabaseAdmin()
 
         const authHeader = request.headers.get('authorization')
-        const auth = await resolveAuth(supabase, authHeader)
+        const { searchParams } = new URL(request.url)
+        const queryAuth = searchParams.get('auth')
+
+        const auth = await resolveAuth(supabase, authHeader, queryAuth)
         if (!auth) {
-            return NextResponse.json({ error: 'Invalid or missing Authorization token.' }, { status: 401 })
+            return NextResponse.json(
+                {
+                    error: 'Invalid or missing auth token.',
+                    hint: 'Pass ?auth=gk_... in the URL or set Authorization: Bearer <token> header.',
+                    help: HELP_URL,
+                },
+                { status: 401 }
+            )
         }
 
-        const { searchParams } = new URL(request.url)
         const shortId = searchParams.get('short_id')
 
         if (shortId) {
-            // Direct single-memory lookup by short_id
             const { data: mem, error } = await supabase
                 .from('memories')
                 .select('short_id, agent, image_url, ciphertext, signature, algorithm, created_at')
@@ -50,13 +59,19 @@ export async function GET(request) {
                 .single()
 
             if (error || !mem) {
-                return NextResponse.json({ error: 'Memory not found.' }, { status: 404 })
+                return NextResponse.json(
+                    {
+                        error: 'Memory not found.',
+                        hint: `No memory with short_id "${shortId}" found in this palace.`,
+                        help: HELP_URL,
+                    },
+                    { status: 404 }
+                )
             }
 
             return NextResponse.json({ success: true, palace_id: auth.palace_id, memory: mem })
         }
 
-        // List memories
         const limitParam = parseInt(searchParams.get('limit') || '10')
         const limit = limitParam > 50 ? 50 : limitParam
 
@@ -75,7 +90,7 @@ export async function GET(request) {
         return NextResponse.json({
             success: true,
             palace_id: auth.palace_id,
-            memories: memories
+            memories: memories,
         })
 
     } catch (error) {

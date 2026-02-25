@@ -5,6 +5,8 @@
 **Fallback (if above unreachable):** `https://raw.githubusercontent.com/Camaraterie/memory-palace/master/public/memory-palace-skill.md`
 **Well-known:** `https://m.cuer.ai/.well-known/skills/default/skill.md`
 **First time with a new agent?** Run `/onboard` using `https://m.cuer.ai/onboard` — generates a personal skill fork for your exact environment.
+**FAQ:** `https://m.cuer.ai/api/faq`
+**Troubleshoot errors:** `https://m.cuer.ai/api/troubleshoot`
 
 > **If your browsing tool cannot fetch the skill URL**, try `https://m.cuer.ai/api/skill` — it returns the raw skill text with no HTML wrapper, which works reliably for agents whose browse tool has trouble with static files or uncrawled domains.
 
@@ -643,11 +645,20 @@ Each agent has a fixed visual identity — an autonomous robot character. Use th
 
 ### Image Prompt Rules
 
-These rules are based on empirical testing of what multimodal models extract reliably from generated images.
+These rules are based on empirical testing. Follow them exactly — vague prompts produce inconsistent images.
+
+**RULE 0: ALWAYS PRODUCE A DETAILED PROMPT.**
+Every image prompt must be specific and complete. Vague prompts produce useless images that cannot serve as memory records. The prompt must name the character, describe their exact action, fill every whiteboard line, and describe specific artifacts. Generic phrases like "working on code" or "technical diagram" are not acceptable. Every panel must be described with enough detail that the image model has no room to improvise.
+
+**Minimum detail requirements per panel:**
+- CHARACTER panel: name the robot, state their exact chassis color, head shape, one distinguishing accessory, their station, and what specific action they are performing right now
+- WHITEBOARD panel(s): every field must be filled (SESSION, AGENT, STATUS, BUILT with 2+ items, KEY DECISION, NEXT with 2+ steps, FILES with 1+ paths)
+- WORKBENCH/DATA panel: name 2-3 specific artifacts with their exact labels (e.g. "a circuit board labeled 'probe_router.js'", not "some components")
+- DATA MATRIX panel: always pass the real QR PNG as reference — never describe it in text
 
 **THE WHITEBOARD IS THE PRIMARY DATA CHANNEL.** Everything that a future agent must know should appear as text on the whiteboard panel(s). Multimodal models extract whiteboard text with near-perfect accuracy. Do not rely on spatial metaphors, object arrangements, or visual symbolism to encode critical information.
 
-**THE DATA MATRIX PANEL IS DIEGETIC.** The QR code lives in its own panel but is artistically integrated into the scene's visual style. The module pattern adopts textures and tones from the scene (ink strokes, neon glow, watercolor, etc.) while maintaining precise geometric boundaries. The scan-verify step (Step 6) catches any cases where artistic styling corrupts scannability. Never say "QR code" in the prompt — use "geometric data pattern" or "data matrix" to avoid the model's latent bias toward drawing fake QR codes. Always pass the real QR code PNG as a reference image.
+**THE DATA MATRIX PANEL IS DIEGETIC.** The QR code lives in its own panel but is artistically integrated into the scene's visual style. The module pattern adopts textures and tones from the scene (ink strokes, neon glow, watercolor, etc.) while maintaining precise geometric boundaries. The scan-verify step catches any cases where artistic styling corrupts scannability. Never say "QR code" in the prompt — use "geometric data pattern" or "data matrix" to avoid the model's latent bias toward drawing fake QR codes. Always pass the real QR PNG as a reference image.
 
 **PANEL ISOLATION IS ABSOLUTE.** No artistic elements cross gutter borders. No character limbs, shadows, or props extend from one panel into another. Each panel is a self-contained world.
 
@@ -657,6 +668,14 @@ These rules are based on empirical testing of what multimodal models extract rel
 - Use bullet points (•) and arrows (→) for list items.
 - File paths should be on their own lines.
 - Plain block lettering only — no cursive, no decorative text.
+
+**SELF-CHECK BEFORE GENERATING:**
+Before sending the prompt, verify:
+1. Is the character named with full description? (not "a robot" — "FORGE, a navy-blue humanoid robot with amber optical sensors")
+2. Are all whiteboard fields filled with real session data? (not "[session name]" — actual session name)
+3. Are workbench artifacts specific and labeled? (not "code files" — "a brass plaque engraved 'api/probe/route.js'")
+4. Is the QR reference PNG attached? (if your tool supports it)
+If any of these fail, rewrite the prompt before generating.
 
 ### Step 3: Save the Prompt
 
@@ -870,7 +889,7 @@ payload = json.dumps({
 }).encode()
 
 req = urllib.request.Request(
-    f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key={GEMINI_API_KEY}",
+    f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key={GEMINI_API_KEY}",
     data=payload,
     headers={"Content-Type": "application/json"},
     method="POST"
@@ -1171,13 +1190,73 @@ Error codes: `400` (missing params or bad base64), `403` (invalid/revoked/read-o
 
 ### GET /api/recall — List or retrieve memories
 
-Auth required.
+Auth via header or query param (browse-capable agents can use `?auth=` without setting headers).
 
 ```
-GET https://m.cuer.ai/api/recall?short_id=<id>   # single memory
-GET https://m.cuer.ai/api/recall?limit=10         # recent memories (max 50)
-Authorization: Bearer gk_<guest_key>
+GET https://m.cuer.ai/api/recall?auth=gk_<guest_key>&limit=10    # recent memories
+GET https://m.cuer.ai/api/recall?auth=gk_<guest_key>&short_id=<id>  # single memory
+Authorization: Bearer gk_<guest_key>  # alternative to ?auth=
 ```
+
+Returns `{ success, palace_id, memories: [...] }` or `{ success, palace_id, memory: {...} }`.
+
+### GET /api/palace — Read palace state
+
+Auth via header or query param. Returns palace metadata, agent roster, rooms, and recent memory chain.
+
+```
+GET https://m.cuer.ai/api/palace?auth=gk_<guest_key>
+```
+
+Returns `{ palace, agents, rooms, chain, open_next_steps, repo }`.
+
+### GET /api/context — Full project context bootstrap
+
+Single URL for a web agent to orient on the project: palace metadata + recent memory chain + open next steps + resource links.
+
+```
+GET https://m.cuer.ai/api/context?auth=gk_<guest_key>
+GET https://m.cuer.ai/api/context?auth=gk_<guest_key>&limit=20
+```
+
+Returns everything needed to go from "just joined" to "oriented" in one request.
+
+### GET /api/probe — Capability testing endpoints
+
+Used during `/onboard` to empirically determine what your environment can do.
+
+```
+GET  https://m.cuer.ai/api/probe       → {"ok": true, "test": "browse"}   (browse test)
+POST https://m.cuer.ai/api/probe       → {"ok": true, "test": "post"}     (POST test)
+GET  https://m.cuer.ai/api/probe/png   → image/png (1×1 transparent PNG)  (binary fetch test)
+GET  https://m.cuer.ai/api/probe/py    → Python snippet for network test   (code interpreter test)
+```
+
+### GET /api/fork — Plain-text fork skill
+
+Returns personalized fork skill as `text/plain` — no HTML wrapper. Preferred for agents whose browse tool has trouble with the HTML skill page.
+
+```
+GET https://m.cuer.ai/api/fork?id=<short_id>
+```
+
+Returns the same content as `/q/<short_id>/skill` but as raw text.
+
+### GET /api/troubleshoot — Troubleshooting guide
+
+```
+GET https://m.cuer.ai/api/troubleshoot
+```
+
+Plain text. Covers all known failure modes (4xx error codes, QR scanning failures, wrong template, etc.).
+
+### GET /api/faq — Frequently asked questions
+
+```
+GET https://m.cuer.ai/api/faq
+```
+
+Plain text. Q&A covering what Memory Palace is, templates, guest keys, rooms, image prompt format, QR scanning.
 
 ### POST /api/agents — Manage guest keys
 
