@@ -7,6 +7,7 @@ import { runMcpServer } from './mcp';
 import { authCommand } from './auth';
 import { inviteAgent, revokeAgent, listAgents } from './agents';
 import { shareMemory } from './share';
+import { attachImage } from './attach';
 
 const program = new Command();
 
@@ -96,6 +97,13 @@ program
     .description('Generate a self-contained Python decrypt snippet for web agents (e.g. ChatGPT)')
     .action(async (short_id) => {
         await shareMemory(short_id);
+    });
+
+program
+    .command('attach <short_id> <image_path>')
+    .description('Attach a generated image to a stored memory (copies to .palace/memories/ and uploads)')
+    .action(async (short_id, image_path) => {
+        await attachImage(short_id, image_path);
     });
 
 program

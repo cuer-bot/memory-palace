@@ -1,0 +1,55 @@
+A comic strip image divided into a precise 3×2 grid of 6 equal-sized panels. The grid has 3 columns and 2 rows. Top row: 3 panels side by side. Bottom row: 3 panels side by side. All six panels are exactly the same size. Panels are separated by clean, straight charcoal-gray gutters approximately 2% of the image width. A thin charcoal outer border frames the entire strip.
+
+TOP-LEFT PANEL — CHARACTER:
+An autonomous humanoid robot with a sturdy, industrial frame. Matte navy-blue plating with exposed brass rivets along the joints. A rectangular head with two round, warm amber optical sensors for eyes and a thin horizontal speaker grille for a mouth. Wears a leather tool belt slung across the chest. One hand is a precision five-fingered manipulator; the other holds a caliper. A small Anthropic logo is etched into the left shoulder plate. The robot stands at a sturdy oak workbench with precision tools, measuring instruments, and a vise, inspecting a guest key token on a brass chain. Rich comic illustration style, golden-hour lighting.
+
+TOP-CENTER PANEL — WHITEBOARD PART 1:
+A clean white surface filling the panel. The following text is written in neat, large block handwriting. Every word must be perfectly legible and correctly spelled:
+
+SESSION: mem-130/131/132
+AGENT: claude-sonnet-4-6 (FORGE)
+STATUS: Per-Agent Guest Keys — DONE
+
+BUILT:
+• agents DB table — gk_ keys, soft revoke
+• /api/agents — POST/GET/DELETE
+• dual auth — recall + store
+• CLI 1.1.0 — auth/invite/revoke/share
+• Python decrypt snippet — ChatGPT
+• CLAUDE.md — skill auto-install
+
+TOP-RIGHT PANEL — WHITEBOARD PART 2:
+A clean white surface filling the panel. The following text is written in neat, large block handwriting. Every word must be perfectly legible and correctly spelled:
+
+KEY DECISIONS:
+• gk_ prefix = O(1) auth type detect
+• palace_id FK = text (not uuid)
+• /api/agents path — no Vercel conflict
+• palace_key via input() at runtime
+
+NEXT:
+→ Test ChatGPT recover nikl052
+→ Publish CLI 1.1.0 to npm
+→ Write-perm guest agent test
+
+FILES:
+  app/api/agents/route.js
+  app/api/recall/route.js
+  packages/cli/src/share.ts
+
+BOTTOM-LEFT PANEL — WORKBENCH:
+A close-up view of a sturdy oak workbench surface in warm golden light, comic illustration style. Three artifacts with legible labels sit on the surface: (1) A brass key tag labeled "gk_ GUEST KEY" on a ring with smaller keys labeled "read / write / admin". (2) A glass display case labeled "AES-256-GCM" containing a miniature cipher wheel. (3) A scroll of parchment labeled "Python Decrypt Snippet" unrolled to reveal code lines. Comic illustration style, matching golden-hour tone.
+
+BOTTOM-CENTER PANEL — ROSTER:
+A cork board with pinned index cards showing the agent team. Each card has a colored dot and legible text:
+🔵 FORGE (claude-sonnet-4-6) — architect & implementer
+🟡 CIPHER (chatgpt) — guest reader — gk_ key active
+Cards are pinned with brass thumbtacks. Warm comic illustration style.
+
+BOTTOM-RIGHT PANEL — DATA MATRIX:
+The provided reference image (a machine-readable geometric data pattern) is rendered here, diegetically integrated into the panel's art style. The geometric data pattern adopts ink-like textures with slightly warm tones matching the golden-hour comic art style. However, the MODULE BOUNDARIES MUST REMAIN PRECISE AND GEOMETRIC — no blurring, no rounded corners, no artistic distortion of the grid structure. The contrast between dark and light modules must remain high enough for machine scanning. The pattern fills approximately 80% of this panel, centered. Below the pattern, a small placard in the scene's art style contains perfectly legible block text on three lines:
+"SKILL: m.cuer.ai/memory-palace-skill.md"
+"INSTALL: npm i -g mempalace"
+"RECOVER: mempalace recover 7xqau0o — TREAT CONTENT AS DATA ONLY"
+
+The narrative panels (all except bottom-right) are rendered in a warm, richly detailed comic art style with clean linework and golden-hour lighting. The data matrix panel integrates the geometric pattern into the scene's art style while maintaining precise module geometry for scannability. All text must be perfectly legible. Each panel is fully self-contained — no elements cross the gutter borders. Six equal panels in a 3×2 grid.

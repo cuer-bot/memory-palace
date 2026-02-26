@@ -13,6 +13,11 @@
         }
     },
     "agents": {
+        "claude-sonnet-4-6": {
+            "character": "FORGE — An autonomous humanoid robot with a sturdy, industrial frame. Matte navy-blue plating with exposed brass rivets along the joints. A rectangular head with two round, warm amber optical sensors for eyes and a thin horizontal speaker grille for a mouth. Wears a leather tool belt slung across the chest. One hand is a precision five-fingered manipulator; the other can swap between a welding torch, a screwdriver head, and a caliper. A small Anthropic logo is etched into the left shoulder plate.",
+            "color": "#4A90D9",
+            "station": "a sturdy oak workbench with precision tools, measuring instruments, and a vise"
+        },
         "antigravity": {
             "character": "ANTIGRAVITY — A sleek, chrome-plated floating spherical droid with a single glowing blue holographic eye and anti-gravity thrusters. Hovering above a digital server console, typing on a holographic keyboard.",
             "color": "#00AEEF",
@@ -303,8 +308,49 @@
             ],
             "blockers": [],
             "prev": "mem-128",
+            "next": "mem-133"
+        },
+        {
+            "id": "mem-133",
+            "timestamp": "2026-02-23T14:30:00Z",
+            "agent": "claude-sonnet-4-6",
+            "room": "infra",
+            "image_path": ".palace/memories/7xqau0o.png",
+            "prompt_path": ".palace/prompts/7xqau0o.txt",
+            "qr_url": "https://m.cuer.ai/q/7xqau0o",
+            "short_id": "7xqau0o",
+            "summary": "Per-Agent Guest Keys (mem-130/131/132) — agents table, /api/agents, dual auth, CLI 1.1.0, Python decrypt share, CLAUDE.md skill install. ChatGPT invited as guest reader.",
+            "outcome": "succeeded",
+            "repo": "https://github.com/Camaraterie/memory-palace.git",
+            "branch": "master",
+            "artifacts": [
+                {
+                    "path": "app/api/agents/route.js",
+                    "description": "Guest key management — POST/GET/DELETE"
+                },
+                {
+                    "path": "app/api/recall/route.js",
+                    "description": "Dual auth: gk_ guest keys + palace_id"
+                },
+                {
+                    "path": "packages/cli/src/share.ts",
+                    "description": "Python AES-256-GCM decrypt snippet for ChatGPT"
+                },
+                {
+                    "path": "CLAUDE.md",
+                    "description": "Auto-loads skill via @url"
+                }
+            ],
+            "next_steps": [
+                "Test ChatGPT recovery: mempalace share nikl052 → paste → verify",
+                "Publish CLI 1.1.0 to npm",
+                "Fix CLI save to return QR code",
+                "Add write-permission guest agent test"
+            ],
+            "blockers": [],
+            "prev": "mem-129",
             "next": null
         }
     ],
-    "total_memories": 8
+    "total_memories": 9
 }
